@@ -19,3 +19,27 @@ First, good job :-)
 
 
 To run container I can use: docker run -it --rm --name my-running-app my-python-app
+
+5. try to move functionality of uvicorn server to move that into python code..so try to ask chatgpt how to do it and maybe also what is better to do from those 2 possibilities in this case
+
+6. in fast api, you have there one api enpoint, the root one with "/"..try to add some based on it which will be called "/now" and it will make get request to get UTC time and return that
+
+7. try to make another endpoint "/search" where it can take query parameter..try to implement in this endpoint method the request to google.com and return the first link which it will find
+
+8. try to make proxy enpoint, where will you have possibility to use 2 parameters in the path, for example "/proxyendpoints/{searched_thing}/{how_many_links}", where searched_thing can be string type and how_many_links integer type..you can ask chatgpt about the typing in endpoints and how to work with that..so for example when somebody will make request to localhost:8000/proxyendpoints/basketball/3, it will use that basketball and 3 and search in google 3 first links about basketball
+
+Good luck and enjoy :)
+///////////////////////////////
+9) create another docker container with another application which will have running python application with mongodb or postgresql
+
+10) this container will have another communication port
+
+11) those 2 containers will be able to comunicate together via those ports
+
+12) in the first container you will make endpoint that you can add items in the database in that second container,where database should be persistant,so if you will stop container,it will keep data in local disc somewhere where specified..
+
+13) you can create some items in database manually or by some requests to it
+
+14) EXTRA task - if you will have surplus for it, you can try to find out,how to define those containers in one docker-compose.yaml file
+
+15) EXTRAEXTRA task - think about how to refactor this project in the files or folders if we have all this
