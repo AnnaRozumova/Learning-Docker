@@ -1,0 +1,43 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:5.0
+    container_name: mongo
+    ports:
+      - "27017:27017"  # Expose MongoDB on port 27017
+    volumes:
+      - ./data/db:/data/db  # Persist MongoDB data in the `data/db` folder on your host
+    networks:
+      - app-network
+
+  db_app:
+    build:
+      context: .
+      dockerfile: ./db_app/Dockerfile
+    container_name: db_app
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase  # Connecting to MongoDB via service name
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    ports:
+      - "5000:5000"
+
+  app:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile 
+    container_name: app
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase  # Connecting to MongoDB via service name
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    ports:
+      - "8080:8080"  # Expose search API on port 8080
+
+networks:
+  app-network:
+    driver: bridge
