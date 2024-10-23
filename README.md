@@ -43,3 +43,23 @@ Good luck and enjoy :)
 14) EXTRA task - if you will have surplus for it, you can try to find out,how to define those containers in one docker-compose.yaml file
 
 15) EXTRAEXTRA task - think about how to refactor this project in the files or folders if we have all this
+////////////////////////////////
+16) you have in app search..we need to have also other methods for:
+    a) add to database
+    b) remove from database
+    c) update some existing item in database
+    d) update some specific property of the item in database
+17) very very basic UI, when for now on the webpage will be just textbox and button for that search
+18)  also another one to write properties of the items to be added in database
+19) ...also for editing of existing item
+20) ...removing of existing item
+...so the database model can be used in the form that you have
+21) there can be possibility to add some property to database model, so maybe textbox and button
+/////ideas for next tasks..
+download some testing database with many items (10000?) and play with that to see what is fast/slow method
+UNIT TESTS
+PYDANTIC models usage
+server is secure - https and one needs certificate to be able to get information
+response modes, requests models
+AWS
+CI/CD pipeline

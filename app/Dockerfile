@@ -8,4 +8,10 @@ RUN pipenv install --system --deploy
 
 COPY ./app/ ./
 
-CMD ["python", "main.py"]
+EXPOSE 8080
+
+ENV FLASK_APP=app.py
+ENV FLAS_RUN_HOST=0.0.0.0
+ENV FLAS_RUN_PORT=8080
+
+CMD ["flask", "run"]
