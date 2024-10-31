@@ -9,8 +9,8 @@
     <h1>{{ message }}</h1>
     <p>Your item has been added successfully.</p>
 
-    <a href="/">Add another item</a><br>
-    <a href="http://localhost:8080">Go to the main page</a> <!-- Link to your app's main page -->
+    <a href="{{ url_for('add_item') }}">Add another item</a><br>
+    <a href="dataset.html">Go to the main page</a> <!-- Link to your app's main page -->
 
 </body>
 </html>

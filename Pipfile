@@ -11,6 +11,7 @@ httpx = "*"
 beautifulsoup4 = "*"
 flask = "*"
 pymongo = "*"
+faker = "*"
 
 [dev-packages]
 

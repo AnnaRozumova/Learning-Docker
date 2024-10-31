@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DataBase Manager</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+    <script>
+        async function handleSearch(event) {
+            event.preventDefault();
+            const query = document.getElementById('query').value;
+            console.log("Search query:", query);  // Debugging log
+
+            if (!query) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            try {
+                // Fetch search results from the backend
+                const response = await fetch(`/search?query=${query}`);
+                console.log("Response status:", response.status);  // Debugging log
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Search results:", data);  // Debugging log
+
+                // Display results in the results div
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';  // Clear previous results
+
+                if (data.error) {
+                    resultsDiv.innerHTML = `<p>${data.error}</p>`;
+                } else if (data.length === 0) {
+                    resultsDiv.innerHTML = '<p>No results found.</p>';
+                } else {
+                    data.forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'item';
+
+                        // Display all the fields for each item
+                        Object.keys(item).forEach(key => {
+                            const fieldDiv = document.createElement('div');
+                            fieldDiv.textContent = `${key}: ${item[key]}`;
+                            itemDiv.appendChild(fieldDiv);
+                        });
+
+                        // Add Update and Delete buttons
+                        const updateButton = document.createElement('button');
+                        updateButton.textContent = 'Update';
+                        updateButton.onclick = () => {
+                            window.location.href = `/update/${item._id}`;  // Redirect to update page
+                        };
+                        itemDiv.appendChild(updateButton);
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = async () => {
+                            const confirmed = confirm('Are you sure you want to delete this item?');
+                            if (confirmed) {
+                                await fetch(`/delete/${item._id}`, { method: 'POST' });
+                                alert('Item deleted');
+                                handleSearch(event);  // Refresh the search results
+                            }
+                        };
+                        itemDiv.appendChild(deleteButton);
+
+                        resultsDiv.appendChild(itemDiv);
+                        resultsDiv.appendChild(document.createElement('hr')); // Separator between items
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching search results:", error);  // Log any error
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = `<p>Error: Unable to fetch search results</p>`;
+            }
+        }
+    </script>
+</head>
+<body class="is-preload">
+    <div id="wrapper">
+        <header id="header">
+            <div class="inner">
+
+                <!-- Logo -->
+                    <a href="{{ url_for('index') }}" class="logo">
+                        <span class="symbol"><img src="{{ url_for('static', filename='images/logo.svg') }}" alt="" /></span><span class="title">Anna Rozumova</span><span class="subtitle">Junior Python Developer</span>
+                    </a>
+
+                <!-- Nav -->
+                    <nav>
+                        <ul>
+                            <li><a href="#menu">Menu</a></li>
+                        </ul>
+                    </nav>
+
+            </div>
+        </header>
+
+    <!-- Menu -->
+        <nav id="menu">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="#">Ipsum veroeros</a></li>
+                <li><a href="#">Tempus etiam</a></li>
+                <li><a href="#">Consequat dolor</a></li>
+                <li><a href="#">Elements</a></li>
+            </ul>
+        </nav>
+        <div id="main">
+            <div class="inner">
+                <h1>Simple DataBase Manager</h1>
+                <span class="image main"><img src="{{ url_for('static', filename='images/pic13.jpg') }}" alt="" /></span>
+                <h2>Searching</h2>
+                <form onsubmit="handleSearch(event)">
+                    <div class="field">
+                        <input type="text" id="query" name="query" placeholder="Enter search term">
+                    </div>
+                    <ul class="actions">
+                        <li><input type="submit" value="Search" class="primary" /></li>
+                    </ul>
+                </form>
+
+                <a href="{{ url_for('add_item') }}" class="button primary fit">Add a New Item</a>
+                
+                <div id="results"></div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="inner">
+                <section>
+                    <h2>Get in touch</h2>
+                    <form method="post" action="#">
+                        <div class="fields">
+                            <div class="field half">
+                                <input type="text" name="name" id="name" placeholder="Name" />
+                            </div>
+                            <div class="field half">
+                                <input type="email" name="email" id="email" placeholder="Email" />
+                            </div>
+                            <div class="field">
+                                <textarea name="message" id="message" placeholder="Message"></textarea>
+                            </div>
+                        </div>
+                        <ul class="actions">
+                            <li><input type="submit" value="Send" class="primary" /></li>
+                        </ul>
+                    </form>
+                </section>
+                <section>
+                    <h2>Follow</h2>
+                    <ul class="icons">
+                        <li><a href="#" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a></li>
+                        <li><a href="#" class="icon brands style2 fa-facebook-f"><span class="label">Facebook</span></a></li>
+                        <li><a href="#" class="icon brands style2 fa-instagram"><span class="label">Instagram</span></a></li>
+                        <li><a href="#" class="icon brands style2 fa-dribbble"><span class="label">Dribbble</span></a></li>
+                        <li><a href="#" class="icon brands style2 fa-github"><span class="label">GitHub</span></a></li>
+                        <li><a href="#" class="icon brands style2 fa-500px"><span class="label">500px</span></a></li>
+                        <li><a href="#" class="icon solid style2 fa-phone"><span class="label">Phone</span></a></li>
+                        <li><a href="#" class="icon solid style2 fa-envelope"><span class="label">Email</span></a></li>
+                    </ul>
+                </section>
+                <ul class="copyright">
+                    <li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                </ul>
+            </div>
+        </footer>
+
+        </div>
+
+        <!-- Scripts -->
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    </div>
+</body>
+</html>

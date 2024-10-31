@@ -15,7 +15,11 @@ collection = db["mycollection"]
 def index():
     return render_template('index.html')
 
-@app.route('/search', methods=['GET'])
+@app.route('/dataset')
+def dataset():
+    return render_template('dataset.html')
+
+@app.route('/dataset/search', methods=['GET'])
 def search_items():
     try:
         query = request.args.get('query')
@@ -36,7 +40,7 @@ def search_items():
         print(f"Error during search: {e}")
         return render_template('message.html', message="An internal error occurred"), 500
 
-@app.route('/update/<id>', methods=['GET', 'POST'])
+@app.route('/dataset/update/<id>', methods=['GET', 'POST'])
 def update_item(id):
     if request.method == 'GET':
         # Retrieve the item by id and display it in a form
@@ -62,7 +66,7 @@ def update_item(id):
         )
         return render_template('message.html', message="Item updated successfully!")
 
-@app.route('/delete/<id>', methods=['POST'])
+@app.route('/dataset/delete/<id>', methods=['POST'])
 def delete_item(id):
     try:
         # Delete the item by id
@@ -74,6 +78,33 @@ def delete_item(id):
     except Exception as e:
         print(f"Error during deletion: {e}")
         return render_template('message.html', message="An internal error occurred"), 500
+    
+
+@app.route('/dataset/add', methods=['GET', 'POST'])
+def add_item():
+    if request.method == 'GET':
+        return render_template('add.html')
+    
+    elif request.method == 'POST':
+        try:
+            if request.form:
+                data = {
+                    "name": request.form.get("name"),
+                    "description": request.form.get("description"),
+                    "example": request.form.get("example")
+                }
+            else:
+                data = request.json
+
+            if not data:
+                return jsonify({"error": "Invalid input, no data provided"}), 400
+        
+            collection.insert_one(data)
+            return render_template('success.html', message="Item added successfully")
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"error": "An internal error occurred"}), 500
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
